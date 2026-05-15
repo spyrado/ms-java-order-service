@@ -17,12 +17,12 @@ public class OrderItem {
   private String productId;
 
   @Column(nullable = false)
-  private String quantity;
+  private Integer quantity;
 
   @Column(nullable = false)
   private BigDecimal price;
 
   @ManyToOne
-  @Column(name = "order_id", nullable = false)
+  @JoinColumn(name = "order_id", nullable = false)
   private Order order;
 }
