@@ -34,8 +34,13 @@ public class OrderController {
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<OrderResponseDTO> create(@PathVariable UUID id, @RequestBody UpdateOrderRequestDTO input) {
+  public ResponseEntity<OrderResponseDTO> update(@PathVariable UUID id, @RequestBody UpdateOrderRequestDTO input) {
     System.out.println("RECEBI ISSO NO PUT: " + input);
-    return ResponseEntity.status(201).build();
+    return ResponseEntity.status(200).build();
+  }
+
+  @DeleteMapping("{id}")
+  public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    return ResponseEntity.noContent().build();
   }
 }
