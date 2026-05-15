@@ -4,6 +4,8 @@ import com.ecommerce.order_service.dto.order.request.CreateOrderRequestDTO;
 import com.ecommerce.order_service.dto.order.request.UpdateOrderRequestDTO;
 import com.ecommerce.order_service.dto.order.response.OrderResponseDTO;
 import com.ecommerce.order_service.dto.order.response.OrderSummaryResponseDTO;
+import com.ecommerce.order_service.service.order.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,34 +15,34 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
+  private final OrderService orderService;
+
   @GetMapping
-  public List<OrderSummaryResponseDTO> getAll() {
-    System.out.println("CHAMEI O ENDPOINT DE LISTA");
-    return List.of();
+  public ResponseEntity<List<OrderSummaryResponseDTO>> getAll() {
+    return ResponseEntity.ok(this.orderService.findAll());
   }
 
   @GetMapping("{id}")
-  public Optional<OrderResponseDTO> getById(@PathVariable UUID id) {
-    System.out.println("RECEBI O ID:" + id);
-    return Optional.empty();
+  public ResponseEntity<OrderResponseDTO> getById(@PathVariable UUID id) {
+    return ResponseEntity.ok(this.orderService.findById(id));
   }
 
   @PostMapping()
-  public ResponseEntity<OrderResponseDTO> create(@RequestBody CreateOrderRequestDTO input) {
-    System.out.println("RECEBI ISSO NO POST: " + input);
-    return ResponseEntity.status(201).build();
+  public ResponseEntity<OrderResponseDTO> create(@RequestBody CreateOrderRequestDTO request) {
+    return ResponseEntity.status(201).body(this.orderService.create(request));
   }
 
-  @PutMapping("{id}")
-  public ResponseEntity<OrderResponseDTO> update(@PathVariable UUID id, @RequestBody UpdateOrderRequestDTO input) {
-    System.out.println("RECEBI ISSO NO PUT: " + input);
-    return ResponseEntity.status(200).build();
+  @PatchMapping("{id}")
+  public ResponseEntity<OrderResponseDTO> update(@PathVariable UUID id, @RequestBody UpdateOrderRequestDTO request) {
+    return ResponseEntity.ok(this.orderService.update(id, request));
   }
 
   @DeleteMapping("{id}")
   public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    this.orderService.delete(id);
     return ResponseEntity.noContent().build();
   }
 }
