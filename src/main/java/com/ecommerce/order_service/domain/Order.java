@@ -34,5 +34,6 @@ public class Order {
   private ZonedDateTime createdAt;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Setter
   private List<OrderItem> items = new ArrayList<>();
 }

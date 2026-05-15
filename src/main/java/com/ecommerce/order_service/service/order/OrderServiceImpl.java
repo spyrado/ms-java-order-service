@@ -1,5 +1,8 @@
 package com.ecommerce.order_service.service.order;
 
+import com.ecommerce.order_service.domain.Order;
+import com.ecommerce.order_service.domain.OrderItem;
+import com.ecommerce.order_service.domain.enums.OrderStatus;
 import com.ecommerce.order_service.dto.order.request.CreateOrderRequestDTO;
 import com.ecommerce.order_service.dto.order.request.UpdateOrderRequestDTO;
 import com.ecommerce.order_service.dto.order.response.OrderResponseDTO;
@@ -43,16 +46,55 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public OrderResponseDTO create(CreateOrderRequestDTO request) {
-    return null;
+    Order order = new Order();
+    order.setCustomerId(request.customerId());
+    order.setStatus(OrderStatus.PENDING);
+
+    List<OrderItem> items = request.items()
+        .stream()
+        .map(itemRequest -> {
+          OrderItem item = new OrderItem();
+          item.setProductId(itemRequest.productId());
+          item.setQuantity(itemRequest.quantity());
+          item.setPrice(itemRequest.price());
+          item.setOrder(order);
+
+          return item;
+        }).toList();
+
+    order.setItems(items);
+
+    Order saved = this.orderRepository.save(order);
+    return new OrderResponseDTO(
+        saved.getId(),
+        saved.getCustomerId(),
+        saved.getStatus(),
+        saved.getCreatedAt()
+    );
   }
 
   @Override
   public OrderResponseDTO update(UUID id, UpdateOrderRequestDTO request) {
-    return null;
+    Order order = this.orderRepository.findById(id)
+        .orElseThrow(() -> new OrderNotFoundException(id));
+
+    order.setStatus(request.status());
+
+    Order saved = this.orderRepository.save(order);
+
+
+    return new OrderResponseDTO(
+        saved.getId(),
+        saved.getCustomerId(),
+        saved.getStatus(),
+        saved.getCreatedAt()
+    );
   }
 
   @Override
   public void delete(UUID id) {
-
+    Order order = this.orderRepository.findById(id)
+        .orElseThrow(() -> new OrderNotFoundException(id));
+    this.orderRepository.delete(order);
   }
 }

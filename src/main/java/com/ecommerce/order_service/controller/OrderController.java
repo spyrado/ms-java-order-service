@@ -1,5 +1,7 @@
 package com.ecommerce.order_service.controller;
 
+import com.ecommerce.order_service.domain.Order;
+import com.ecommerce.order_service.domain.enums.OrderStatus;
 import com.ecommerce.order_service.dto.order.request.CreateOrderRequestDTO;
 import com.ecommerce.order_service.dto.order.request.UpdateOrderRequestDTO;
 import com.ecommerce.order_service.dto.order.response.OrderResponseDTO;
