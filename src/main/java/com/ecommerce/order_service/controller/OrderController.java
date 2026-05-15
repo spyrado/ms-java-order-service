@@ -33,7 +33,7 @@ public class OrderController {
     return ResponseEntity.status(201).build();
   }
 
-  @PatchMapping("{id}")
+  @PutMapping("{id}")
   public ResponseEntity<OrderResponseDTO> create(@PathVariable UUID id, @RequestBody UpdateOrderRequestDTO input) {
     System.out.println("RECEBI ISSO NO PUT: " + input);
     return ResponseEntity.status(201).build();
